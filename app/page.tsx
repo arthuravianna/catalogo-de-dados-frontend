@@ -9,7 +9,7 @@ export default async function Home() {
       <SidePanel />
       <div id="frames-area" className="flex-1 flex flex-col gap-2 p-2 h-full">
         <div className="h-12 bg-white p-2 rounded-md w-full"></div>
-        <div className="flex-1 grid grid-cols-2 h-[95%]">
+        <div className="flex-1 grid grid-cols-2 h-[95%] gap-2">
           <TreeFrame />
           <TableFrame />
         </div>
