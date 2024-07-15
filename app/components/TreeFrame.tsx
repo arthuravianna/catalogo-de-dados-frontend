@@ -3,7 +3,7 @@
 
 
 import React, { useState, useEffect, useContext } from 'react';
-import { Tree, TreeEventNodeEvent, TreeHeaderTemplateOptions } from 'primereact/tree';
+import { Tree, TreeEventNodeEvent, TreeExpandedKeysType, TreeHeaderTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
 import { SubjectContext } from './SubjectProvider';
 import { query_namespace_roots, query_relation_predicates } from '../public/connection';
@@ -38,6 +38,7 @@ function TreeFrame() {
     const { view, namespace, changeSubject,changeSelectedSubject } = useContext(SubjectContext);
     
     const [nodes, setNodes] = useState<TreeNode[]>([]);
+    const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>();
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
@@ -64,6 +65,7 @@ function TreeFrame() {
                 key: data[rootPosition][rootPosition],
                 label: data[rootPosition][rootLabelPosition]? format_string(data[rootPosition][rootLabelPosition]): data[rootPosition][rootPosition],
                 expanded: true,
+                style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"},
                 children: []
             };
         
@@ -74,12 +76,13 @@ function TreeFrame() {
                         key: data[i][rootChildPosition],
                         label: data[i][rootChildLabelPosition]? format_string(data[i][rootChildLabelPosition]): data[i][rootChildPosition],
                         leaf: false,
-                        style: {marginLeft: 4, padding: "0px 0px 0px 8px"},
+                        style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"}
                     }
                 );
             }
         
             setNodes([node]);
+            setExpandedKeys({});
             setLoading(false);
         }
 
@@ -98,6 +101,9 @@ function TreeFrame() {
 
         let node = { ...event.node };
         node.children = [];
+        let toBeExpanded:TreeExpandedKeysType = {}
+        if (node.id) toBeExpanded[node.id] = true;
+
         for (let i = 0; i < predicates.length; i++) {
             if (!subjectInfo.relations.hasOwnProperty(predicates[i])) continue;
 
@@ -106,9 +112,9 @@ function TreeFrame() {
                 key: `${node.id}-${predicates[i]}`,
                 label: predicates[i],
                 style: {marginLeft: 4, padding: "0px 0px 0px 8px"},
-                expanded: true,
                 children: []
             }
+            toBeExpanded[`${node.id}-${predicates[i]}`] = true;
 
             for (let j = 0; j < subjectInfo.relations[predicates[i]].length; j++) {
                 const obj = subjectInfo.relations[predicates[i]][j];
@@ -118,7 +124,7 @@ function TreeFrame() {
                     key: obj.object,
                     label: obj.caption? format_string(obj.caption): obj.object,
                     leaf: obj.terminal,
-                    style: {marginLeft: 4, padding: "0px 0px 0px 8px"}
+                    style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"}
                 }
 
                 if (obj.terminal) {
@@ -132,6 +138,7 @@ function TreeFrame() {
 
         let currNodes = updateTreeNode(nodes[0], node);
         setNodes([currNodes]);
+        setExpandedKeys({...expandedKeys, ...toBeExpanded});
         setLoading(false);
     }
 
@@ -150,7 +157,7 @@ function TreeFrame() {
     }
 
     return (
-        <Tree onNodeClick={selectNode} emptyMessage={"Select a data source."} header={headerTemplate} value={nodes} filter filterMode="lenient" onExpand={loadNewSubject} loading={loading} className="w-full md:w-30rem h-full overflow-auto" />
+        <Tree expandedKeys={expandedKeys} onToggle={(e) => setExpandedKeys(e.value)} onNodeClick={selectNode} emptyMessage={"Select a data source."} header={headerTemplate} value={nodes} filter filterMode="lenient" onExpand={loadNewSubject} loading={loading} className="w-full md:w-30rem h-full overflow-auto" />
     )
 }
 

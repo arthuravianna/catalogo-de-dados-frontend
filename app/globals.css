@@ -12,6 +12,6 @@ body {
   }
 
   .frame {
-    @apply rounded-md p-2 bg-white h-fit;
+    @apply rounded-md p-2 bg-white h-full overflow-auto;
   }
 }

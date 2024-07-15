@@ -7,6 +7,7 @@ import { SubjectContext } from './SubjectProvider';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
+import { query_relation_predicates } from '../public/connection';
 
 interface Relation {
   predicate:string,
@@ -14,8 +15,9 @@ interface Relation {
 }
 
 function TableFrame() {
-  const { selectedSubject } = useContext(SubjectContext);
+  const { view, selectedSubject } = useContext(SubjectContext);
   const [ data, setData ] = useState<Array<Relation>>([]);
+  const [ predicates, setPredicates ] = useState<Array<string>>([]);
 
   useEffect(() => {
     let newData:Array<Relation> = [];
@@ -23,7 +25,8 @@ function TableFrame() {
     for (let predicate in selectedSubject.relations) {
       for (let i = 0; i < selectedSubject.relations[predicate].length; i++) {
         const object = selectedSubject.relations[predicate][i];
-        console.log(predicate, object);
+
+        if (predicates.includes(predicate)) continue;
 
         newData.push({predicate: predicate, object: object.object});
       }
@@ -31,7 +34,14 @@ function TableFrame() {
 
     if (newData.length > 0) setData(newData);
   }, [selectedSubject])
+
+  useEffect(() => {
+    query_relation_predicates(view).then((relation_predicates) => {
+      if (relation_predicates) setPredicates(relation_predicates);
+    })
+  }, [view])
   
+
   return (
     <div className='frame'>
       <DataTable emptyMessage={"Select a node."} value={data} >

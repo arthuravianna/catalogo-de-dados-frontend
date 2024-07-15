@@ -2,6 +2,8 @@ import SidePanel from "./components/SidePanel";
 import TableFrame from "./components/TableFrame";
 import TreeFrame from "./components/TreeFrame";
 
+export const revalidate = 300;
+
 export default async function Home() {
 
   return (
