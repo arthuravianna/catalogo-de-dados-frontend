@@ -16,9 +16,7 @@ function NamespaceFrame() {
     const { namespace, view } = useContext(SubjectContext);
     const [ data, setData ] = useState<Array<Info>>([]);
     const [loading, setLoading] = useState(true);
-
-    const parentHeight = document.getElementById("frame-content")?.offsetHeight;
-    const tableHeight = parentHeight? `${parentHeight-20}px`:"400px"
+    const [tableHeight, setTableHeight] = useState("400px");
 
     useEffect(() => {
         if (!namespace) return;
@@ -50,6 +48,16 @@ function NamespaceFrame() {
 
     }, [namespace])
 
+    useEffect(handleResize, []);
+
+    function handleResize() {
+        const parentHeight = document.getElementById("frame-content")?.offsetHeight;
+        if (parentHeight) setTableHeight(`${parentHeight-20}px`);
+    }
+
+    if (typeof window != "undefined") {
+        window.addEventListener("resize", handleResize);
+    }
 
     return (
         <div className='frame'>
