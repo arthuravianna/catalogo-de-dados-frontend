@@ -14,4 +14,8 @@ body {
   .frame {
     @apply rounded-md p-2 bg-white h-full overflow-auto;
   }
+
+  .frame-container {
+    @apply h-0 min-h-full;
+  }
 }

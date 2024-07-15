@@ -1,8 +1,7 @@
+import FramesContent from "./components/FramesContent";
+import HeaderFrame from "./components/HeaderFrame";
 import SidePanel from "./components/SidePanel";
-import TableFrame from "./components/TableFrame";
-import TreeFrame from "./components/TreeFrame";
 
-export const revalidate = 300;
 
 export default async function Home() {
 
@@ -10,11 +9,8 @@ export default async function Home() {
     <main className="h-lvh flex">
       <SidePanel />
       <div id="frames-area" className="flex-1 flex flex-col gap-2 p-2 h-full">
-        <div className="h-12 bg-white p-2 rounded-md w-full"></div>
-        <div className="flex-1 grid grid-cols-2 h-[95%] gap-2">
-          <TreeFrame />
-          <TableFrame />
-        </div>
+        <HeaderFrame />
+        <FramesContent />
       </div>
     </main>
   );

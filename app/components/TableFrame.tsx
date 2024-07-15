@@ -44,9 +44,9 @@ function TableFrame() {
 
   return (
     <div className='frame'>
-      <DataTable emptyMessage={"Select a node."} value={data} >
-          <Column field="predicate" header="Predicate"></Column>
-          <Column field="object" header="Object"></Column>
+      <DataTable emptyMessage={"Select a node."} value={data} stripedRows >
+          <Column field="predicate" header="Predicate" className='p-1'></Column>
+          <Column field="object" header="Object" className='p-1'></Column>
       </DataTable>
     </div>
   )

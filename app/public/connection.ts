@@ -226,3 +226,41 @@ export async function query_namespace_roots(namespace:string) {
     
     return response
 }
+
+
+
+// SELECT ?cap ?o ?def ?v WHERE {
+// 	?s ds:field ?o.
+//         ?o xsem:definition ?def.
+//         OPTIONAL {?o xsem:valueExample ?v}.
+//         OPTIONAL { ?o irdf:level ?level.}
+//         OPTIONAL {?o irdf:caption ?cap.}
+// FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o ds:listOf ?y} && isUri(?o) && STRSTARTS(STR(?o), STR(vif:)) )
+// } ORDER BY ?level
+export async function query_namespace_info(namespace:string, current_view:number) {
+    const current_view_predicates = await query_relation_predicates(current_view);
+
+    if (!current_view_predicates) return null;
+
+    let filter = `FILTER (`
+
+    for (let predicate of current_view_predicates) {
+        filter += `NOT EXISTS {?o ${predicate} ?x} && `
+    }
+
+    filter += `STRSTARTS(STR(?o), STR(${namespace}:))` + ")"
+
+    const query = `
+    SELECT ?cap ?o ?def ?v WHERE {
+ 	    ?s ds:field ?o.
+        ?o xsem:definition ?def.
+        OPTIONAL {?o xsem:valueExample ?v}.
+        OPTIONAL {?o irdf:level ?level}.
+        OPTIONAL {?o irdf:caption ?cap}.
+        ${filter}
+    } ORDER BY ?level
+    `
+    const response = await do_query(query);
+
+    return response.result;
+}
