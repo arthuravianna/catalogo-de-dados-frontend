@@ -29,7 +29,7 @@ function NamespaceFrame() {
         const definitionPos = 2;
         const valPos = 3;
 
-        query_root_info(root.name, view)
+        query_root_info(root.name, view, root.isNamespace)
         .then((res) => {
             for (let item of res) {
                 newData.push(
@@ -61,7 +61,7 @@ function NamespaceFrame() {
 
     return (
         <div className='frame'>
-            <DataTable loading={loading} value={data} stripedRows scrollable scrollHeight={tableHeight} style={{fontSize: 12}} >
+            <DataTable unstyled={false} loading={loading} value={data} stripedRows scrollable scrollHeight={tableHeight} style={{fontSize: 12}} >
                 <Column field="name" header="Name" className='p-1'></Column>
                 <Column field="definition" header="Definition" className='p-1'></Column>
                 <Column field="value" header="Example Value" className='p-1'></Column>

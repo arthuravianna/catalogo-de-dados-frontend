@@ -237,7 +237,7 @@ export async function query_namespace_roots(namespace:string) {
 //         OPTIONAL {?o irdf:caption ?cap.}
 // FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o ds:listOf ?y} && isUri(?o) && STRSTARTS(STR(?o), STR(vif:)) )
 // } ORDER BY ?level
-export async function query_root_info(root:string, current_view:number) {
+export async function query_root_info(root:string, current_view:number, isNamespace:boolean = false) {
     const current_view_predicates = await query_relation_predicates(current_view);
 
     if (!current_view_predicates) return null;
@@ -248,7 +248,11 @@ export async function query_root_info(root:string, current_view:number) {
         filter += `NOT EXISTS {?o ${predicate} ?x} && `
     }
 
-    filter += `STRSTARTS(STR(?o), STR(${root}_))` + ")"
+    if (isNamespace) {
+        filter += `STRSTARTS(STR(?o), STR(${root}:))` + ")"
+    } else {
+        filter += `STRSTARTS(STR(?o), STR(${root}_))` + ")"
+    }
 
     const query = `
     SELECT ?cap ?o ?def ?v WHERE {
