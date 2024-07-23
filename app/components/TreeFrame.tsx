@@ -6,7 +6,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Tree, TreeEventNodeEvent, TreeExpandedKeysType, TreeHeaderTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
 import { SubjectContext } from './SubjectProvider';
-import { query_namespace_roots, query_relation_predicates } from '../public/connection';
+import { get_caption, query_namespace_roots, query_relation_predicates, query_subject_info } from '../public/connection';
 
 function format_string(s:string) {
     const chars = ["'", "\""]
@@ -35,19 +35,19 @@ function updateTreeNode(curr_node:TreeNode, node:TreeNode) {
 
 
 function TreeFrame() {
-    const { view, namespace, changeSubject,changeSelectedSubject } = useContext(SubjectContext);
+    const { view, root, changeSelectedSubject } = useContext(SubjectContext);
     
     const [nodes, setNodes] = useState<TreeNode[]>([]);
     const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>();
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!namespace) return;
+        if (!root) return;
 
         const namespace_root = async() => {
             setLoading(true);
 
-            let data = (await query_namespace_roots(namespace.namespace)).result
+            let data = (await query_namespace_roots(root.name)).result
 
             if (data.length == 0) {
                 setLoading(false);
@@ -86,20 +86,50 @@ function TreeFrame() {
             setLoading(false);
         }
 
-        namespace_root();
-    }, [namespace]);
+        const non_namespace_root = async () => {
+            setLoading(true);
 
+            const subject_caption = await get_caption(root.name);
 
-    const loadNewSubject = async (event:TreeEventNodeEvent) => {
-        if (!event.node.id || event.node.children) return;
+            let node:TreeNode = {
+                id: root.name,
+                key: root.name,
+                label: subject_caption? format_string(subject_caption): root.name,
+                expanded: true,
+                style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"},
+            };
+
+            await loadNewSubject(node, true);
+
+            setLoading(false);
+        }
+
+        if (root.isNamespace) namespace_root();
+        else non_namespace_root();
+
+    }, [root]);
+
+    const getSubjectInfo = async (name:string) => {
+        const relations = await query_subject_info(name, view);
+        if (relations) {
+            const subject = {name: name, relations: relations};
+            return subject;
+        }
+
+        return null;
+    }
+
+    const loadNewSubject = async (currNode:TreeNode, isRoot:boolean = false) => {
+        if (!currNode.id || currNode.children) return;
 
         setLoading(true);
-        const subjectInfo = await changeSubject(event.node.id);
+        const subjectInfo = await getSubjectInfo(currNode.id);
+        if (!subjectInfo) return;
         
         const predicates = await query_relation_predicates(view);
         if (!predicates) return;
 
-        let node = { ...event.node };
+        let node = { ...currNode };
         node.children = [];
         let toBeExpanded:TreeExpandedKeysType = {}
         if (node.id) toBeExpanded[node.id] = true;
@@ -136,10 +166,19 @@ function TreeFrame() {
             node.children.push(predicateNode);
         }
 
-        let currNodes = updateTreeNode(nodes[0], node);
-        setNodes([currNodes]);
-        setExpandedKeys({...expandedKeys, ...toBeExpanded});
+        if (isRoot) {
+            setNodes([node]);
+            setExpandedKeys(toBeExpanded);
+        } else {
+            let currNodes = updateTreeNode(nodes[0], node);
+            setNodes([currNodes]);
+            setExpandedKeys({...expandedKeys, ...toBeExpanded});    
+        }
         setLoading(false);
+    }
+
+    const handleExpand = async (event:TreeEventNodeEvent) => {
+        loadNewSubject(event.node);
     }
 
     const selectNode = async (event:TreeEventNodeEvent) => {
@@ -157,7 +196,18 @@ function TreeFrame() {
     }
 
     return (
-        <Tree expandedKeys={expandedKeys} onToggle={(e) => setExpandedKeys(e.value)} onNodeClick={selectNode} emptyMessage={"Select a data source."} header={headerTemplate} value={nodes} filter filterMode="lenient" onExpand={loadNewSubject} loading={loading} className="w-full md:w-30rem h-full overflow-auto" />
+        <Tree 
+        expandedKeys={expandedKeys} 
+        onToggle={(e) => setExpandedKeys(e.value)} 
+        onNodeClick={selectNode} 
+        emptyMessage={"Select a data source."} 
+        header={headerTemplate} 
+        value={nodes} 
+        filter 
+        filterMode="lenient" 
+        onExpand={handleExpand} 
+        loading={loading} 
+        className="w-full md:w-30rem h-full overflow-auto" />
     )
 }
 

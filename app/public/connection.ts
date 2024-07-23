@@ -51,14 +51,14 @@ function format_caption(caption:string) {
     return caption.substring(1, caption.length-1);
 }
 
-async function get_label(subject:string) {
+export async function get_caption(subject:string) {
     const query = `SELECT ?subject_caption WHERE {${subject} irdf:caption ?subject_caption}`;
     const response = await do_query(query);
 
     // get label if exists and use substring to remove "
-    const label = response.result.length > 0? format_caption(response.result[0][0]):null;
+    const caption = response.result.length > 0? format_caption(response.result[0][0]):null;
 
-    return label;
+    return caption;
 }
 
 
@@ -97,7 +97,7 @@ export async function query_navigable_namespaces(current_view:number) {
             "namespace": row[0],
             // not working. INVESTIGATE!
             // "caption": row[1]
-            "caption": await get_label(`${row[0]}:${row[0]}`)
+            "caption": await get_caption(`${row[0]}:${row[0]}`)
         });
     }
 
@@ -237,7 +237,7 @@ export async function query_namespace_roots(namespace:string) {
 //         OPTIONAL {?o irdf:caption ?cap.}
 // FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o ds:listOf ?y} && isUri(?o) && STRSTARTS(STR(?o), STR(vif:)) )
 // } ORDER BY ?level
-export async function query_namespace_info(namespace:string, current_view:number) {
+export async function query_root_info(root:string, current_view:number) {
     const current_view_predicates = await query_relation_predicates(current_view);
 
     if (!current_view_predicates) return null;
@@ -248,7 +248,7 @@ export async function query_namespace_info(namespace:string, current_view:number
         filter += `NOT EXISTS {?o ${predicate} ?x} && `
     }
 
-    filter += `STRSTARTS(STR(?o), STR(${namespace}:))` + ")"
+    filter += `STRSTARTS(STR(?o), STR(${root}_))` + ")"
 
     const query = `
     SELECT ?cap ?o ?def ?v WHERE {
@@ -260,6 +260,25 @@ export async function query_namespace_info(namespace:string, current_view:number
         ${filter}
     } ORDER BY ?level
     `
+    const response = await do_query(query);
+
+    return response.result;
+}
+
+// SELECT ?dataSource WHERE {
+// 	icatalogo:dataSourceFromNamespace ds:field ?dataSource .
+// 	FILTER (
+// 		STRSTARTS(STR(?dataSource), STR(mlab:))
+// 	)
+// }
+export async function query_namespace_datasources(namespace:string) {
+    const query = `SELECT ?dataSource WHERE {
+    	icatalogo:dataSourceFromNamespace ds:field ?dataSource .
+    	FILTER (
+    		STRSTARTS(STR(?dataSource), STR(${namespace}:))
+	    )
+    }`;
+
     const response = await do_query(query);
 
     return response.result;

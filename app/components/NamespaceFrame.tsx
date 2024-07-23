@@ -4,7 +4,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import React, { useContext, useEffect, useState } from 'react'
 import { SubjectContext } from './SubjectProvider'
-import { query_namespace_info } from '../public/connection'
+import { query_root_info } from '../public/connection'
 
 interface Info {
     name:string,
@@ -13,13 +13,13 @@ interface Info {
 }
 
 function NamespaceFrame() {
-    const { namespace, view } = useContext(SubjectContext);
+    const { root, view } = useContext(SubjectContext);
     const [ data, setData ] = useState<Array<Info>>([]);
     const [loading, setLoading] = useState(true);
     const [tableHeight, setTableHeight] = useState("400px");
 
     useEffect(() => {
-        if (!namespace) return;
+        if (!root) return;
 
         if (!loading) setLoading(true);
         let newData:Array<Info> = [];
@@ -29,7 +29,7 @@ function NamespaceFrame() {
         const definitionPos = 2;
         const valPos = 3;
 
-        query_namespace_info(namespace.namespace, view)
+        query_root_info(root.name, view)
         .then((res) => {
             for (let item of res) {
                 newData.push(
@@ -46,7 +46,7 @@ function NamespaceFrame() {
         })
 
 
-    }, [namespace])
+    }, [root])
 
     useEffect(handleResize, []);
 
