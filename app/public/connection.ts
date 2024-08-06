@@ -4,8 +4,8 @@
 import { envClient } from "./envClient"
 
 
-export type NamespaceWithCaption = {
-    namespace:string,
+export type NameWithCaption = {
+    name:string,
     caption:string|null
 }
 
@@ -89,12 +89,12 @@ export async function query_navigable_namespaces(current_view:number) {
     if (query.length == 0) return null;
 
     let response = await do_query(query);
-    let namespaces:Array<NamespaceWithCaption> = [];
+    let namespaces:Array<NameWithCaption> = [];
 
     for (let i = 0; i < response.result.length; i++) {
         const row = response.result[i]
         namespaces.push({
-            "namespace": row[0],
+            "name": row[0],
             // not working. INVESTIGATE!
             // "caption": row[1]
             "caption": await get_caption(`${row[0]}:${row[0]}`)
@@ -269,21 +269,32 @@ export async function query_root_info(root:string, current_view:number, isNamesp
     return response.result;
 }
 
-// SELECT ?dataSource WHERE {
+// SELECT ?dataSource ?dataSourceCaption WHERE {
 // 	icatalogo:dataSourceFromNamespace ds:field ?dataSource .
+//  OPTIONAL {?dataSource irdf:caption ?dataSourceCaption}.
 // 	FILTER (
 // 		STRSTARTS(STR(?dataSource), STR(mlab:))
 // 	)
 // }
 export async function query_namespace_datasources(namespace:string) {
-    const query = `SELECT ?dataSource WHERE {
+    const query = `SELECT ?dataSource ?dataSourceCaption WHERE {
     	icatalogo:dataSourceFromNamespace ds:field ?dataSource .
+        OPTIONAL {?dataSource irdf:caption ?dataSourceCaption}.
     	FILTER (
     		STRSTARTS(STR(?dataSource), STR(${namespace}:))
 	    )
     }`;
 
     const response = await do_query(query);
+    let dataSources:Array<NameWithCaption> = [];
 
-    return response.result;
+    for (let i = 0; i < response.result.length; i++) {
+        const row = response.result[i]
+        dataSources.push({
+            "name": row[0],
+            "caption": row[1]? format_caption(row[1]):row[1]
+        });
+    }
+
+    return dataSources;
 }

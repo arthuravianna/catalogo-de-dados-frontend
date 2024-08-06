@@ -7,6 +7,13 @@ import { Tree, TreeEventNodeEvent, TreeExpandedKeysType, TreeHeaderTemplateOptio
 import { TreeNode } from 'primereact/treenode';
 import { SubjectContext } from './SubjectProvider';
 import { get_caption, query_namespace_roots, query_relation_predicates, query_subject_info } from '../public/connection';
+import { IoList } from "react-icons/io5";
+import { BsDot } from "react-icons/bs";
+
+const ICONS_MAP:Record<string, React.JSX.Element> = {
+    "ds:listof": <IoList />,
+    "ds:field": <BsDot />
+}
 
 function format_string(s:string) {
     const chars = ["'", "\""]
@@ -137,33 +144,38 @@ function TreeFrame() {
         for (let i = 0; i < predicates.length; i++) {
             if (!subjectInfo.relations.hasOwnProperty(predicates[i])) continue;
 
-            let predicateNode:TreeNode = {
-                id: `${node.id}-${predicates[i]}`,
-                key: `${node.id}-${predicates[i]}`,
-                label: predicates[i],
-                style: {marginLeft: 4, padding: "0px 0px 0px 8px"},
-                children: []
-            }
-            toBeExpanded[`${node.id}-${predicates[i]}`] = true;
+            // let predicateNode:TreeNode = {
+            //     id: `${node.id}-${predicates[i]}`,
+            //     key: `${node.id}-${predicates[i]}`,
+            //     label: predicates[i],
+            //     style: {marginLeft: 4, padding: "0px 0px 0px 8px"},
+            //     children: []
+            // }
+            // toBeExpanded[`${node.id}-${predicates[i]}`] = true;
+
+            const icon = ICONS_MAP[(predicates[i] as string).toLowerCase()];
 
             for (let j = 0; j < subjectInfo.relations[predicates[i]].length; j++) {
                 const obj = subjectInfo.relations[predicates[i]][j];
 
-                const child = {
+                const child:TreeNode = {
                     id: obj.object,
                     key: obj.object,
+                    icon: icon,
                     label: obj.caption? format_string(obj.caption): obj.object,
                     leaf: obj.terminal,
                     style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"}
                 }
 
                 if (obj.terminal) {
-                    predicateNode.children = [child, ...predicateNode.children!]
+                    //predicateNode.children = [child, ...predicateNode.children!]
+                    node.children = [child, ...node.children];
                 } else {
-                    predicateNode.children!.push(child);
+                    //predicateNode.children!.push(child);
+                    node.children.push(child);
                 }
             }
-            node.children.push(predicateNode);
+            // node.children.push(predicateNode);
         }
 
         if (isRoot) {

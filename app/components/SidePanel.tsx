@@ -4,26 +4,26 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { PiCubeBold } from "react-icons/pi";
-import { query_navigable_namespaces, NamespaceWithCaption, query_namespace_datasources } from '../public/connection';
+import { query_navigable_namespaces, NameWithCaption, query_namespace_datasources } from '../public/connection';
 import { SubjectContext } from './SubjectProvider';
 
 
 function SidePanel() {
     const { view, changeRoot } = useContext(SubjectContext);
-    const [rootDataSources, setRootDataSources] = useState<Array<NamespaceWithCaption>|null>([]);
-    const [dataSources, setDataSources] = useState<Record<string, Array<string>>>({});
+    const [rootDataSources, setRootDataSources] = useState<Array<NameWithCaption>|null>([]);
+    const [dataSources, setDataSources] = useState<Record<string, Array<NameWithCaption>>>({});
 
     useEffect(() => {
         const getData = async () => {
             const namespaces = await query_navigable_namespaces(view);
             if (!namespaces) return;
 
-            let namespaceDataSources:Record<string, Array<string>> = {};
+            let namespaceDataSources:Record<string, Array<NameWithCaption>> = {};
             for (let namespace of namespaces) {
                 //if (!namespaceDataSources[namespace.namespace]) namespaceDataSources[namespace.namespace] = [];
 
-                const sources = await query_namespace_datasources(namespace.namespace);
-                namespaceDataSources[namespace.namespace] = sources;
+                const sources = await query_namespace_datasources(namespace.name);
+                namespaceDataSources[namespace.name] = sources;
             }
             
             setRootDataSources(namespaces);
@@ -47,16 +47,16 @@ function SidePanel() {
                     rootDataSources?.map((rootSource, index) => {
                         return (
                             <SubMenu 
-                            key={`${rootSource.namespace}-${index}`} 
+                            key={`${rootSource.name}-${index}`} 
                             open={true} 
-                            onClick={() => changeRoot({name: rootSource.namespace, isNamespace: true})}
-                            label={rootSource.caption? rootSource.caption:rootSource.namespace}>
+                            onClick={() => changeRoot({name: rootSource.name, isNamespace: true})}
+                            label={rootSource.caption? rootSource.caption:rootSource.name}>
                                 {
-                                    dataSources[rootSource.namespace].map((dataSouce, index) => {
+                                    dataSources[rootSource.name].map((dataSouce, index) => {
                                         return (
                                             <MenuItem key={`${dataSouce}-${index}`} style={{fontSize: "12px"}}
-                                            onClick={() => changeRoot({name: dataSouce, isNamespace: false})}>
-                                                {dataSouce}
+                                            onClick={() => changeRoot({name: dataSouce.name, isNamespace: false})}>
+                                                {dataSouce.caption? dataSouce.caption:dataSouce.name}
                                             </MenuItem>
                                         )
                                     })
