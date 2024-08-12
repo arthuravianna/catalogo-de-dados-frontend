@@ -2,7 +2,7 @@
 
 
 import { createContext, useState } from 'react';
-import { NamespaceWithCaption, query_subject_info, SubjectRelation } from '../public/connection';
+import { query_subject_info, SubjectRelation } from '../public/connection';
 
 const FRAME_OPTIONS = ["tree", "flat"] as const;
 type FRAME = typeof FRAME_OPTIONS;        // type x = readonly ['op1', 'op2', ...]
@@ -34,14 +34,12 @@ export const SubjectContext = createContext<{
     view:number,
     root:Root, changeRoot(root:Root):void,
     frame:FRAME_OPTIONS_TYPE,changeFrame(frame:FRAME_OPTIONS_TYPE):void
-    // namespace:NamespaceWithCaption|null, changeNamespace(n:NamespaceWithCaption):void,
     subject:Subject, changeSubject(s:string):Promise<Subject>,
     selectedSubject:Subject, changeSelectedSubject(subjectName:string):void
 }>({
     view:0,
     root:emptyRoot, changeRoot:(root:Root) => null,
     frame:"tree", changeFrame:() => null,
-    // namespace:null,  changeNamespace:(n:NamespaceWithCaption) => null,
     subject: emptySubject, changeSubject: async (s:string) => emptySubject,
     selectedSubject:emptySubject, changeSelectedSubject: async () => null
 });
@@ -49,17 +47,12 @@ export const SubjectContext = createContext<{
 
 export function SubjectProvider({ children }:{ children: React.ReactNode }) {
     const [root, setRoot] = useState(emptyRoot);
-    const [namespace, setNamespace] = useState<NamespaceWithCaption|null>(null);
     const [subject, setSubject] = useState<Subject>(emptySubject);
     const [selectedSubject, setSelectedSubject] = useState<Subject>(emptySubject);
     const [view, setCurrentView] = useState(0); // view = structural
     const [frame, setFrame] = useState<FRAME_OPTIONS_TYPE>("tree");
 
 
-    // const changeNamespace = (n:NamespaceWithCaption) => {
-    //     setNamespace(n);
-    //     setSubject(emptySubject);
-    // }
 
     // change current root, can be a namespace or a subject
     const changeRoot = (root:Root) => setRoot(root);
