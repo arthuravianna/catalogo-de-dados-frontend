@@ -7,9 +7,10 @@ import { PiCubeBold } from "react-icons/pi";
 import { query_navigable_namespaces, NameWithCaption, query_namespace_datasources } from '../public/connection';
 import { SubjectContext } from './SubjectProvider';
 
+const RNP_BLUE = "#001EFF";
 
 function SidePanel() {
-    const { view, changeRoot } = useContext(SubjectContext);
+    const { view, root, changeRoot } = useContext(SubjectContext);
     const [rootDataSources, setRootDataSources] = useState<Array<NameWithCaption>|null>([]);
     const [dataSources, setDataSources] = useState<Record<string, Array<NameWithCaption>>>({});
 
@@ -34,19 +35,36 @@ function SidePanel() {
     }, [])
 
     return (
-        <Sidebar breakPoint="md" width='256px' className='bg-black'>
+        <Sidebar breakPoint="md" width='256px'  backgroundColor="#FFFFFF">
             <div className='flex items-center justify-center gap-2 my-4'>
-                <PiCubeBold className='text-5xl' />
+                <PiCubeBold style={{color: RNP_BLUE}} className='text-5xl' />
                 <div className='flex flex-col items-center'>
-                    <span className='text-xl'>Catalogo de Dados</span>
-                    <span className='text-xs'>(Fontes de Dados)</span>
+                    <span className='text-xl font-bold'>Catalogo de Dados</span>
+                    <span className='text-xs font-semibold'>(Fontes de Dados)</span>
                 </div>
             </div>
-            <Menu>
+            <Menu menuItemStyles={
+                {
+                    button: ({ level, active, disabled }) => {
+                        return {
+                            color: active ? '#FFFFFF' : undefined,
+                            backgroundColor: active ? RNP_BLUE : level == 0? "#F8F8F8":undefined,
+                            fontWeight: level == 0? "500": "",
+                            fontSize: level == 0? "16px": "12px",
+                            '&:hover': {
+                                backgroundColor: RNP_BLUE,
+                                color: '#FFFFFF',
+                            }
+                        };
+                    },
+                  }
+            }>
+                
                 {
                     rootDataSources?.map((rootSource, index) => {
                         return (
                             <SubMenu 
+                            active={root.name == rootSource.name}
                             key={`${rootSource.name}-${index}`} 
                             open={true} 
                             onClick={() => changeRoot({name: rootSource.name, isNamespace: true})}
@@ -54,7 +72,7 @@ function SidePanel() {
                                 {
                                     dataSources[rootSource.name].map((dataSouce, index) => {
                                         return (
-                                            <MenuItem key={`${dataSouce}-${index}`} style={{fontSize: "12px"}}
+                                            <MenuItem active={root.name == dataSouce.name} key={`${dataSouce}-${index}`}
                                             onClick={() => changeRoot({name: dataSouce.name, isNamespace: false})}>
                                                 {dataSouce.caption? dataSouce.caption:dataSouce.name}
                                             </MenuItem>
