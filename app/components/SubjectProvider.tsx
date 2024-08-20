@@ -35,13 +35,17 @@ export const SubjectContext = createContext<{
     root:Root, changeRoot(root:Root):void,
     frame:FRAME_OPTIONS_TYPE,changeFrame(frame:FRAME_OPTIONS_TYPE):void
     subject:Subject, changeSubject(s:string):Promise<Subject>,
-    selectedSubject:Subject, changeSelectedSubject(subjectName:string):void
+    selectedSubject:Subject, changeSelectedSubject(subjectName:string):void,
+    exportData:boolean, setExportData(e:boolean):void,
+    dataToExport:string, changeDataToExport(data:string):void
 }>({
     view:0,
     root:emptyRoot, changeRoot:(root:Root) => null,
     frame:"tree", changeFrame:() => null,
     subject: emptySubject, changeSubject: async (s:string) => emptySubject,
-    selectedSubject:emptySubject, changeSelectedSubject: async () => null
+    selectedSubject:emptySubject, changeSelectedSubject: async () => null,
+    exportData:false, setExportData: (e:boolean) => null,
+    dataToExport:"", changeDataToExport: (data:string) => null
 });
 
 
@@ -51,6 +55,8 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
     const [selectedSubject, setSelectedSubject] = useState<Subject>(emptySubject);
     const [view, setCurrentView] = useState(0); // view = structural
     const [frame, setFrame] = useState<FRAME_OPTIONS_TYPE>("tree");
+    const [exportData, setExportData] = useState(false);
+    const [dataToExport, setDataToExport] = useState("");
 
 
 
@@ -79,6 +85,10 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
         setFrame(frame);
     }
 
+    const changeDataToExport = (data:string) => {
+        setDataToExport(data);
+    }
+
     return (
         <SubjectContext.Provider value={ {
             view,
@@ -86,7 +96,9 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
             frame, changeFrame,
             // namespace, changeNamespace,
             subject, changeSubject,
-            selectedSubject, changeSelectedSubject
+            selectedSubject, changeSelectedSubject,
+            exportData, setExportData,
+            dataToExport, changeDataToExport
         } }>
             { children }
         </SubjectContext.Provider>

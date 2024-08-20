@@ -11,6 +11,10 @@ body {
     text-wrap: balance;
   }
 
+  .bg-rnp-blue {
+    @apply bg-[#001EFF];
+  }
+
   .frame {
     @apply rounded-md p-2 bg-white h-full overflow-auto;
   }

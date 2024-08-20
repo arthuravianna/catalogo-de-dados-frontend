@@ -12,11 +12,30 @@ interface Info {
     value:string
 }
 
-function NamespaceFrame() {
-    const { root, view } = useContext(SubjectContext);
+function FlatFrame() {
+    const { root, view, exportData, setExportData, changeDataToExport } = useContext(SubjectContext);
     const [ data, setData ] = useState<Array<Info>>([]);
     const [loading, setLoading] = useState(true);
     const [tableHeight, setTableHeight] = useState("400px");
+    const [selectedData, setSelectedData] = useState<Array<Info>|null>(null);
+
+    useEffect(() => {
+        if (!exportData) return;
+        if (!selectedData || selectedData.length == 0) {
+            alert("Select the fields to be exported.");
+            setExportData(false); // clear
+            return;
+        }
+
+        let csvData = "name,definition,example_value";
+        let csvRowInfo:Info;
+        for (let i = 0; i < selectedData.length; i++) {
+            csvRowInfo = selectedData[i];
+            csvData += `\n${csvRowInfo.name},${csvRowInfo.definition},${csvRowInfo.value}`;
+        }
+
+        changeDataToExport(csvData);
+    }, [exportData]);
 
     useEffect(() => {
         if (!root) return;
@@ -61,7 +80,10 @@ function NamespaceFrame() {
 
     return (
         <div className='frame'>
-            <DataTable unstyled={false} loading={loading} value={data} stripedRows scrollable scrollHeight={tableHeight} style={{fontSize: 12}} >
+            <DataTable 
+            selectionMode={null} selection={selectedData!} onSelectionChange={(e:any) => setSelectedData(e.value)}
+            loading={loading} value={data} stripedRows scrollable scrollHeight={tableHeight} style={{fontSize: 12}} >
+                <Column selectionMode="multiple"  headerStyle={{ width: '3rem' }}></Column>
                 <Column field="name" header="Name" className='p-1'></Column>
                 <Column field="definition" header="Definition" className='p-1'></Column>
                 <Column field="value" header="Example Value" className='p-1'></Column>
@@ -70,4 +92,4 @@ function NamespaceFrame() {
     )
 }
 
-export default NamespaceFrame
+export default FlatFrame
