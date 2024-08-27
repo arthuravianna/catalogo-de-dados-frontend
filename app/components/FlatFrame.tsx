@@ -5,6 +5,8 @@ import { DataTable } from 'primereact/datatable'
 import React, { useContext, useEffect, useState } from 'react'
 import { SubjectContext } from './SubjectProvider'
 import { query_root_info } from '../public/connection'
+import { remove_quotes } from '../public/utils'
+//import { IoWarning } from "react-icons/io5"; // TODO: add warning "Example Value" is not included in the exported CSV
 
 interface Info {
     name:string,
@@ -28,11 +30,11 @@ function FlatFrame() {
             return;
         }
 
-        let csvData = "name,definition,type";
+        let csvData = "name,type,definition";
         let csvRowInfo:Info;
         for (let i = 0; i < selectedData.length; i++) {
             csvRowInfo = selectedData[i];
-            csvData += `\n${csvRowInfo.name},${csvRowInfo.definition},${csvRowInfo.type}`;
+            csvData += `\n${csvRowInfo.name},${csvRowInfo.type},${csvRowInfo.definition}`;
         }
 
         changeDataToExport(csvData);
@@ -54,9 +56,9 @@ function FlatFrame() {
             for (let item of res) {
                 newData.push(
                     {
-                        name: item[namePos],
+                        name: remove_quotes(item[namePos]),
                         definition: item[definitionPos],
-                        type: item[typePos],
+                        type: remove_quotes(item[typePos]),
                         value: item[valPos]
                     }
                 )
@@ -86,10 +88,10 @@ function FlatFrame() {
             selectionMode={null} selection={selectedData!} onSelectionChange={(e:any) => setSelectedData(e.value)}
             loading={loading} value={data} stripedRows scrollable scrollHeight={tableHeight} style={{fontSize: 12}} >
                 <Column selectionMode="multiple"  headerStyle={{ width: '3rem' }}></Column>
-                <Column field="name" header="Name" className='p-1'></Column>
-                <Column field="definition" header="Definition" className='p-1'></Column>
-                <Column field="type" header="Type" className='p-1'></Column>
-                <Column field="value" header="Example Value" className='p-1'></Column>
+                <Column field="name" header="Name" className='py-1'></Column>
+                <Column field="type" header="Type" className='py-1'></Column>
+                <Column field="value" header="Example Value" className='py-1'></Column>
+                <Column field="definition" header="Definition" className='py-1'></Column>
             </DataTable>
         </div>
     )
