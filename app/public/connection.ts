@@ -229,14 +229,16 @@ export async function query_namespace_roots(namespace:string) {
 
 
 
-// SELECT ?cap ?o ?def ?v WHERE {
-// 	?s ds:field ?o.
-//         ?o xsem:definition ?def.
-//         OPTIONAL {?o xsem:valueExample ?v}.
-//         OPTIONAL { ?o irdf:level ?level.}
-//         OPTIONAL {?o irdf:caption ?cap.}
-// FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o ds:listOf ?y} && isUri(?o) && STRSTARTS(STR(?o), STR(vif:)) )
-// } ORDER BY ?level
+// SELECT ?name ?o ?def ?v ?col WHERE {
+//     ?s ds:field ?o.
+//           ?o xsem:definition ?def.
+//  ?o irdf:exptabSet "vif".
+//  ?o irdf:exptabColumn ?col.
+//  ?o irdf:exptabType ?type
+//           OPTIONAL {?o xsem:valueExample ?v}.
+//           OPTIONAL { ?o irdf:exptabOrder ?level.}
+//  FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o ds:listOf ?y} && isUri(?o)  )
+//  } GROUP BY ?name ORDER BY ?level
 export async function query_root_info(root:string, current_view:number, isNamespace:boolean = false) {
     const current_view_predicates = await query_relation_predicates(current_view);
 
@@ -244,25 +246,26 @@ export async function query_root_info(root:string, current_view:number, isNamesp
 
     let filter = `FILTER (`
 
-    for (let predicate of current_view_predicates) {
-        filter += `NOT EXISTS {?o ${predicate} ?x} && `
+    for (let i = 0; i < current_view_predicates.length; i++) {
+        const predicate = current_view_predicates[i];
+
+        if (i != 0) filter += "&& ";
+        filter += `NOT EXISTS {?o ${predicate} ?x} `;
     }
 
-    if (isNamespace) {
-        filter += `STRSTARTS(STR(?o), STR(${root}:))` + ")"
-    } else {
-        filter += `STRSTARTS(STR(?o), STR(${root}_))` + ")"
-    }
+    filter += ")"
 
     const query = `
-    SELECT ?cap ?o ?def ?v WHERE {
+    SELECT ?name ?def ?type ?v WHERE {
  	    ?s ds:field ?o.
         ?o xsem:definition ?def.
+        ?o irdf:exptabSet "${root}".
+        ?o irdf:exptabColumn ?name.
+        ?o irdf:exptabType ?type
         OPTIONAL {?o xsem:valueExample ?v}.
-        OPTIONAL {?o irdf:level ?level}.
-        OPTIONAL {?o irdf:caption ?cap}.
+        OPTIONAL {?o irdf:exptabOrder ?level}.
         ${filter}
-    } ORDER BY ?level
+    } GROUP BY ?name ORDER BY ?level
     `
     const response = await do_query(query);
 

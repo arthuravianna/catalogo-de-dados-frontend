@@ -9,6 +9,7 @@ import { query_root_info } from '../public/connection'
 interface Info {
     name:string,
     definition:string,
+    type:string,
     value:string
 }
 
@@ -27,11 +28,11 @@ function FlatFrame() {
             return;
         }
 
-        let csvData = "name,definition,example_value";
+        let csvData = "name,definition,type";
         let csvRowInfo:Info;
         for (let i = 0; i < selectedData.length; i++) {
             csvRowInfo = selectedData[i];
-            csvData += `\n${csvRowInfo.name},${csvRowInfo.definition},${csvRowInfo.value}`;
+            csvData += `\n${csvRowInfo.name},${csvRowInfo.definition},${csvRowInfo.type}`;
         }
 
         changeDataToExport(csvData);
@@ -44,8 +45,8 @@ function FlatFrame() {
         let newData:Array<Info> = [];
 
         const namePos = 0;
-        const objectPos = 1
-        const definitionPos = 2;
+        const definitionPos = 1;
+        const typePos = 2;
         const valPos = 3;
 
         query_root_info(root.name, view, root.isNamespace)
@@ -53,8 +54,9 @@ function FlatFrame() {
             for (let item of res) {
                 newData.push(
                     {
-                        name: item[namePos]? item[namePos]: item[objectPos],
+                        name: item[namePos],
                         definition: item[definitionPos],
+                        type: item[typePos],
                         value: item[valPos]
                     }
                 )
@@ -86,6 +88,7 @@ function FlatFrame() {
                 <Column selectionMode="multiple"  headerStyle={{ width: '3rem' }}></Column>
                 <Column field="name" header="Name" className='p-1'></Column>
                 <Column field="definition" header="Definition" className='p-1'></Column>
+                <Column field="type" header="Type" className='p-1'></Column>
                 <Column field="value" header="Example Value" className='p-1'></Column>
             </DataTable>
         </div>
