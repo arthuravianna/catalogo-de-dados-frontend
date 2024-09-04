@@ -19,6 +19,8 @@ function SidePanel() {
             const namespaces = await query_navigable_namespaces(view);
             if (!namespaces) return;
 
+            changeRoot({name: namespaces[0].name, isNamespace: true}); // pre select the first namespace
+
             let namespaceDataSources:Record<string, Array<NameWithCaption>> = {};
             for (let namespace of namespaces) {
                 //if (!namespaceDataSources[namespace.namespace]) namespaceDataSources[namespace.namespace] = [];

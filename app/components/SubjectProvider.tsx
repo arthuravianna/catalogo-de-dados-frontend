@@ -61,7 +61,10 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
 
 
     // change current root, can be a namespace or a subject
-    const changeRoot = (root:Root) => setRoot(root);
+    const changeRoot = (root:Root) => {
+        root.isNamespace? setFrame("tree"):setFrame("flat");
+        setRoot(root);
+    }
 
     const changeSubject = async (subjectName:string) => {
         const relations = await query_subject_info(subjectName, view);

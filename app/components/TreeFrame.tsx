@@ -6,7 +6,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Tree, TreeEventNodeEvent, TreeExpandedKeysType, TreeHeaderTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
 import { SubjectContext } from './SubjectProvider';
-import { get_caption, query_namespace_roots, query_relation_predicates, query_subject_info } from '../public/connection';
+import { query_namespace_roots, query_relation_predicates, query_subject_info } from '../public/connection';
 import { IoList } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
 
@@ -92,27 +92,7 @@ function TreeFrame() {
             setExpandedKeys({});
             setLoading(false);
         }
-
-        const non_namespace_root = async () => {
-            setLoading(true);
-
-            const subject_caption = await get_caption(root.name);
-
-            let node:TreeNode = {
-                id: root.name,
-                key: root.name,
-                label: subject_caption? format_string(subject_caption): root.name,
-                expanded: true,
-                style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"},
-            };
-
-            await loadNewSubject(node, true);
-
-            setLoading(false);
-        }
-
         if (root.isNamespace) namespace_root();
-        else non_namespace_root();
 
     }, [root]);
 

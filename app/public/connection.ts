@@ -2,6 +2,7 @@
 
 
 import { envClient } from "./envClient"
+import { remove_quotes } from "./utils";
 
 
 export type NameWithCaption = {
@@ -259,7 +260,7 @@ export async function query_root_info(root:string, current_view:number, isNamesp
     SELECT ?name ?def ?type ?v WHERE {
  	    ?s ds:field ?o.
         ?o xsem:definition ?def.
-        ?o irdf:exptabSet "${root}".
+        ?o irdf:exptabSet "${remove_quotes(root)}".
         ?o irdf:exptabColumn ?name.
         ?o irdf:exptabType ?type
         OPTIONAL {?o xsem:valueExample ?v}.
