@@ -33,7 +33,8 @@ async function do_query(query:string) {
         },
         body: query,
         next: {
-            revalidate: 300
+            //revalidate: 300
+            revalidate: 0
         }
     });
 
