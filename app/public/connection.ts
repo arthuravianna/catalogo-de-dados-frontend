@@ -231,16 +231,21 @@ export async function query_namespace_roots(namespace:string) {
 
 
 
-// SELECT ?name ?o ?def ?v ?col WHERE {
+// SELECT ?name ?def ?type ?unit ?v ?unitName ?unitDefinition WHERE {
 //     ?s ds:field ?o.
-//           ?o xsem:definition ?def.
-//  ?o irdf:exptabSet "vif".
-//  ?o irdf:exptabColumn ?col.
-//  ?o irdf:exptabType ?type
-//           OPTIONAL {?o xsem:valueExample ?v}.
-//           OPTIONAL { ?o irdf:exptabOrder ?level.}
-//  FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o ds:listOf ?y} && isUri(?o)  )
-//  } GROUP BY ?name ORDER BY ?level
+// ?o xsem:definition ?def.
+// ?o irdf:exptabSet "psf:APPU_Endpoint".
+// ?o irdf:exptabColumn ?name.
+// ?o irdf:exptabType ?type.
+// OPTIONAL {?o xsem:valueExample ?v}.
+// OPTIONAL {
+//      ?o irdf:exptabUnit ?unit
+//      OPTIONAL {?unit xsem:name ?unitName}.
+//     OPTIONAL {?unit xsem:definition ?unitDefinition}.
+// }.
+// OPTIONAL {?o irdf:exptabOrder ?level}.
+// FILTER (NOT EXISTS {?o ds:field ?x} && NOT EXISTS {?o ds:listOf ?x} && NOT EXISTS {?o ds:timeSeries ?x} && NOT EXISTS {?o ds:oneOf ?x} && NOT EXISTS {?o rest:dataEndpoint ?x} && NOT EXISTS {?o rest:endpointParameter ?x} && NOT EXISTS {?o xsem:dataDomain ?x} && NOT EXISTS {?o ds:rootData ?x} && NOT EXISTS {?o ds:concept ?x} )
+// } GROUP BY ?name ORDER BY ?level
 export async function query_root_info(root:string, current_view:number, isNamespace:boolean = false) {
     const current_view_predicates = await query_relation_predicates(current_view);
 
@@ -258,13 +263,18 @@ export async function query_root_info(root:string, current_view:number, isNamesp
     filter += ")"
 
     const query = `
-    SELECT ?name ?def ?type ?v WHERE {
+    SELECT ?name ?def ?type ?unit ?v ?unitName ?unitDefinition WHERE {
  	    ?s ds:field ?o.
         ?o xsem:definition ?def.
         ?o irdf:exptabSet "${remove_quotes(root)}".
         ?o irdf:exptabColumn ?name.
-        ?o irdf:exptabType ?type
+        ?o irdf:exptabType ?type.
         OPTIONAL {?o xsem:valueExample ?v}.
+        OPTIONAL {
+            ?o irdf:exptabUnit ?unit
+            OPTIONAL {?unit xsem:name ?unitName}.
+            OPTIONAL {?unit xsem:definition ?unitDefinition}.    
+        }.
         OPTIONAL {?o irdf:exptabOrder ?level}.
         ${filter}
     } GROUP BY ?name ORDER BY ?level

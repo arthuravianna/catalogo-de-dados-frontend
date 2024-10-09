@@ -7,12 +7,16 @@ import { SubjectContext } from './SubjectProvider'
 import { query_root_info } from '../public/connection'
 import { remove_quotes } from '../public/utils'
 //import { IoWarning } from "react-icons/io5"; // TODO: add warning "Example Value" is not included in the exported CSV
+import { IoIosHelpCircleOutline } from "react-icons/io";
 
 interface Info {
     name:string,
     definition:string,
     type:string,
-    value:string
+    unit:string|null,
+    value:string,
+    unitName:string|null,
+    unitDefinition:string|null
 }
 
 function FlatFrame() {
@@ -49,7 +53,10 @@ function FlatFrame() {
         const namePos = 0;
         const definitionPos = 1;
         const typePos = 2;
-        const valPos = 3;
+        const unitPos = 3;
+        const valPos = 4;
+        const unitNamePos = 5;
+        const unitDefinitionPos = 6;
 
         query_root_info(root.name, view, root.isNamespace)
         .then((res) => {
@@ -59,7 +66,10 @@ function FlatFrame() {
                         name: remove_quotes(item[namePos]),
                         definition: item[definitionPos],
                         type: remove_quotes(item[typePos]),
-                        value: item[valPos]
+                        unit: item[unitPos]? remove_quotes(item[unitPos]): null,
+                        value: item[valPos],
+                        unitName: item[unitNamePos]? remove_quotes(item[unitNamePos]): null,
+                        unitDefinition: item[unitDefinitionPos]? remove_quotes(item[unitDefinitionPos]): null
                     }
                 )
             }
@@ -72,6 +82,29 @@ function FlatFrame() {
     }, [root])
 
     useEffect(handleResize, []);
+
+    function unitBody(info:Info) {
+        let text = "-";
+
+        if (info.unitName) {
+            text = info.unitName;
+        } else if (info.unit) {
+            text = info.unit;
+        }
+
+
+        return <span className='flex gap-1 items-center' >
+                {text}
+
+                {
+                    !info.unitDefinition?
+                        <></>
+                    :
+                        <IoIosHelpCircleOutline className='text-lg hover:txt-rnp-blue' title={info.unitDefinition}/>
+                }
+                
+            </span>
+    }
 
     function handleResize() {
         const parentHeight = document.getElementById("frame-content")?.offsetHeight;
@@ -90,6 +123,7 @@ function FlatFrame() {
                 <Column selectionMode="multiple"  headerStyle={{ width: '3rem' }}></Column>
                 <Column field="name" header="Name" className='py-1'></Column>
                 <Column field="type" header="Type" className='py-1'></Column>
+                <Column field="unit" header="Unit" className='py-1' body={unitBody} ></Column>
                 <Column field="value" header="Example Value" className='py-1'></Column>
                 <Column field="definition" header="Definition" className='py-1'></Column>
             </DataTable>
