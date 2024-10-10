@@ -7,7 +7,7 @@ import { SubjectContext } from './SubjectProvider'
 import { query_root_info } from '../public/connection'
 import { remove_quotes } from '../public/utils'
 //import { IoWarning } from "react-icons/io5"; // TODO: add warning "Example Value" is not included in the exported CSV
-import { IoIosHelpCircleOutline } from "react-icons/io";
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 interface Info {
     name:string,
@@ -100,7 +100,7 @@ function FlatFrame() {
                     !info.unitDefinition?
                         <></>
                     :
-                        <IoIosHelpCircleOutline className='text-lg hover:txt-rnp-blue' title={info.unitDefinition}/>
+                        <IoInformationCircleOutline className='text-lg hover:txt-rnp-blue' title={info.unitDefinition}/>
                 }
                 
             </span>
