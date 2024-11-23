@@ -4,10 +4,10 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import React, { useContext, useEffect, useState } from 'react'
 import { SubjectContext } from './SubjectProvider'
-import { query_root_info } from '../public/connection'
 import { remove_quotes } from '../public/utils'
 //import { IoWarning } from "react-icons/io5"; // TODO: add warning "Example Value" is not included in the exported CSV
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { query_root_info } from '../public/connectionDataSources'
 
 interface Info {
     name:string,

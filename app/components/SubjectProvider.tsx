@@ -2,7 +2,8 @@
 
 
 import { createContext, useState } from 'react';
-import { query_subject_info, SubjectRelation } from '../public/connection';
+import { SubjectRelation, VIEW } from '../public/connectionTypesDefinitions';
+import { query_subject_info } from '../public/connectionDataSources';
 
 const FRAME_OPTIONS = ["tree", "flat"] as const;
 type FRAME = typeof FRAME_OPTIONS;        // type x = readonly ['op1', 'op2', ...]
@@ -31,7 +32,7 @@ const emptySubject:Subject = {
 }
 
 export const SubjectContext = createContext<{
-    view:number,
+    view:VIEW,
     root:Root, changeRoot(root:Root):void,
     frame:FRAME_OPTIONS_TYPE,changeFrame(frame:FRAME_OPTIONS_TYPE):void
     subject:Subject, changeSubject(s:string):Promise<Subject>,
@@ -53,7 +54,7 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
     const [root, setRoot] = useState(emptyRoot);
     const [subject, setSubject] = useState<Subject>(emptySubject);
     const [selectedSubject, setSelectedSubject] = useState<Subject>(emptySubject);
-    const [view, setCurrentView] = useState(0); // view = structural
+    const [view, setCurrentView] = useState(VIEW.STRUCTURAL); // view = structural
     const [frame, setFrame] = useState<FRAME_OPTIONS_TYPE>("tree");
     const [exportData, setExportData] = useState(false);
     const [dataToExport, setDataToExport] = useState("");

@@ -6,39 +6,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Tree, TreeEventNodeEvent, TreeExpandedKeysType, TreeHeaderTemplateOptions } from 'primereact/tree';
 import { TreeNode } from 'primereact/treenode';
 import { SubjectContext } from './SubjectProvider';
-import { query_namespace_roots, query_relation_predicates, query_subject_info } from '../public/connection';
 import { IoList } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
+import { remove_quotes, updateTreeNode } from '../public/utils';
+import { query_namespace_roots, query_subject_info, query_relation_predicates } from '../public/connectionDataSources';
 
 const ICONS_MAP:Record<string, React.JSX.Element> = {
     "ds:listof": <IoList />,
     "ds:field": <BsDot />
 }
 
-function format_string(s:string) {
-    const chars = ["'", "\""]
-
-    if (chars.includes(s[0]) && chars.includes(s[s.length-1]) && s.length > 2)
-        return s.substring(1, s.length-1);
-    return s;
-}
-
-function updateTreeNode(curr_node:TreeNode, node:TreeNode) {
-    if (curr_node.key == node.key) {
-        return node;
-    }
-
-    if (curr_node.children) {
-        for (let i = 0; i < curr_node.children.length; i++) {
-            const aux = curr_node.children[i];
-            curr_node.children[i] = updateTreeNode(curr_node.children[i], node);
-
-            if (curr_node.children[i].children?.length != aux.children?.length) break;
-        }    
-    }
-
-    return curr_node;
-}
 
 
 function TreeFrame() {
@@ -70,7 +47,7 @@ function TreeFrame() {
             let node:TreeNode = {
                 id: data[rootPosition][rootPosition],
                 key: data[rootPosition][rootPosition],
-                label: data[rootPosition][rootLabelPosition]? format_string(data[rootPosition][rootLabelPosition]): data[rootPosition][rootPosition],
+                label: data[rootPosition][rootLabelPosition]? remove_quotes(data[rootPosition][rootLabelPosition]): data[rootPosition][rootPosition],
                 expanded: true,
                 style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"},
                 children: []
@@ -81,7 +58,7 @@ function TreeFrame() {
                     {
                         id: data[i][rootChildPosition],
                         key: data[i][rootChildPosition],
-                        label: data[i][rootChildLabelPosition]? format_string(data[i][rootChildLabelPosition]): data[i][rootChildPosition],
+                        label: data[i][rootChildLabelPosition]? remove_quotes(data[i][rootChildLabelPosition]): data[i][rootChildPosition],
                         leaf: false,
                         style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"}
                     }
@@ -142,7 +119,7 @@ function TreeFrame() {
                     id: obj.object,
                     key: obj.object,
                     icon: icon,
-                    label: obj.caption? format_string(obj.caption): obj.object,
+                    label: obj.caption? remove_quotes(obj.caption): obj.object,
                     leaf: obj.terminal,
                     style: {marginLeft: 4, padding: "0px 0px 0px 8px", cursor: "pointer"}
                 }

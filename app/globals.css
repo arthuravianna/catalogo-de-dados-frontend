@@ -3,10 +3,15 @@
 @tailwind utilities;
 
 body {
-  background: rgb(197, 198, 208);
+  /* background: rgb(197, 198, 208); */
+  background-color: #F0F2EF;
 }
 
 @layer utilities {
+  #frames-area {
+    @apply flex-1 flex flex-col gap-2 p-2 h-full;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -19,11 +24,120 @@ body {
     @apply text-[#001EFF];
   }
 
+  .bg-cream {
+    @apply bg-[#FFFDF2];
+  }
+
   .frame {
     @apply rounded-md p-2 bg-white h-full overflow-auto;
   }
 
   .frame-container {
     @apply h-0 min-h-full;
+  }
+}
+
+
+/* Card */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
+
+.card {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  width: 22em;
+  /* max-width: 80%; */
+  /* max-width: 100%; */
+  padding: 2em 0;
+  background: #FFFDF2;
+  box-shadow: 0 0 6px 0 rgba(#202024, .12);
+  transition: all .35s ease;
+  
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    background: #000;
+    height: 4px;
+  }
+  
+  &::before {
+    width: 0;
+    opacity: 0;
+    transition: opacity 0 ease, width 0 ease;
+    transition-delay: .5s;
+  }
+  
+  &::after {
+    width: 100%;
+    background: white;
+    transition: width .5s ease;
+  }
+  
+  .content {
+    width: 18em;
+    /* max-width: 80%; */
+  }
+  
+  .logo {
+    margin: 0 0 1em;
+    width: 10.625em;
+    transition: all .35s ease;
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: x-large;
+  }
+  
+  h6 {
+    color: #999;
+    font-weight: 600;
+    font-size: x-small;
+    text-transform: uppercase;
+    margin: 0;
+    letter-spacing: 2px;
+  }
+  
+  .hover_content {
+    overflow: hidden;
+    max-height: 0;
+    transform: translateY(1em);
+    transition: all .55s ease;
+    
+    p {
+      margin: 1.5em 0 0;
+      color: #6E6E70;
+      line-height: 1.4em;
+    }
+  }
+  
+  &:hover {
+    /* width: 24em; */
+    box-shadow: 0 10px 20px 0 rgba(#202024, .12);
+    
+    &::before {
+      width: 100%;
+      opacity: 1;
+      transition: opacity .5s ease, width .5s ease;
+      transition-delay: 0;
+    }
+    
+    &::after {
+      width: 0;
+      opacity: 0;
+      transition: width 0 ease;
+    }
+    
+    .logo {
+      margin-bottom: .5em;
+    }
+    
+    .hover_content {
+      max-height: 10em;
+      transform: none;
+    }
   }
 }
