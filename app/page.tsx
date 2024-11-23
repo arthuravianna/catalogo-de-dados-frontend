@@ -21,7 +21,7 @@ export default async function Home() {
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean hendrerit mi orci, eget porta orci pretium in. Aliquam euismod eros lorem, in dignissim nulla maximus.
         </p>
 
-        <div className="grid grid-cols-3 gap-4 content-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 content-center">
           <Link href="/datasources">
             <div className="card">
               <div className="content">
@@ -36,47 +36,20 @@ export default async function Home() {
             </div>
           </Link>
 
-          <Link href="/datasources">
+          <Link href="/datatypes">
             <div className="card">
               <div className="content">
                 {/* <img class="logo" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/76882/logo.svg" alt="mparticle"> */}
-                <h1>Fontes de Dados</h1>
-                <h6>Explore as fontes de dados da RNP</h6>
+                <h1>Tipos de Dados</h1>
+                <h6>Explore os tipos de dados da RNP</h6>
                 
                 <div className="hover_content">
-                  <p>Explore as diversas fontes de dados da RNP com medições de PoP para PoP e PoP para cliente.</p>
+                  <p>Explore os diversas tipos de dados que a RNP tem a oferecer.</p>
                 </div>
               </div>
             </div>
           </Link>
 
-          <Link href="/datasources">
-            <div className="card">
-              <div className="content">
-                {/* <img class="logo" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/76882/logo.svg" alt="mparticle"> */}
-                <h1>Fontes de Dados</h1>
-                <h6>Explore as fontes de dados da RNP</h6>
-                
-                <div className="hover_content">
-                  <p>Explore as diversas fontes de dados da RNP com medições de PoP para PoP e PoP para cliente.</p>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/datasources">
-            <div className="card">
-              <div className="content">
-                {/* <img class="logo" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/76882/logo.svg" alt="mparticle"> */}
-                <h1>Fontes de Dados</h1>
-                <h6>Explore as fontes de dados da RNP</h6>
-                
-                <div className="hover_content">
-                  <p>Explore as diversas fontes de dados da RNP com medições de PoP para PoP e PoP para cliente.</p>
-                </div>
-              </div>
-            </div>
-          </Link>
         </div>
       </div>
     </main>

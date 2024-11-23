@@ -7,7 +7,7 @@ import { SubjectContext } from './SubjectProvider';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
-import { query_relation_predicates } from '../public/connection';
+import { query_relation_predicates } from '../public/connectionDataSources';
 
 interface Relation {
   predicate:string,
