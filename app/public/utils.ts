@@ -1,12 +1,10 @@
 import { TreeNode } from "primereact/treenode";
 
 export const RNP_BLUE = "#001EFF";
+const INTERFACE_CONTENT_OPTIONS = ["datasources", "datatypes"] as const;
+type INTERFACE_CONTENT = typeof INTERFACE_CONTENT_OPTIONS;        // type x = readonly ['op1', 'op2', ...]
+export type INTERFACE_CONTENT_TYPE = INTERFACE_CONTENT[number]
 
-// export function remove_quotes(s:string) {
-//     if (s[0] == '"' && s[s.length-1] == '"') s = s.substring(1, s.length-1);
-
-//     return s;
-// }
 
 export function remove_quotes(s:string) {
     const chars = ["'", "\""]

@@ -3,13 +3,16 @@
 
 import { Tree, TreeEventNodeEvent, TreeExpandedKeysType } from 'primereact/tree'
 import { TreeNode } from 'primereact/treenode';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { getDataFromDataType, getDataTypes } from '../public/connectionDataTypes';
 import { remove_quotes, updateTreeNode } from '../public/utils';
 import { get_caption } from '../public/connection';
+import { SubjectContext } from './SubjectProvider';
 
 
 function TreeFrameDataTypes() {
+    const { changeSelectedSubject } = useContext(SubjectContext);
+
     const [nodes, setNodes] = useState<TreeNode[]>([]);
     const [expandedKeys, setExpandedKeys] = useState<TreeExpandedKeysType>();
     const [loading, setLoading] = useState<boolean>(false);
@@ -109,11 +112,17 @@ function TreeFrameDataTypes() {
         setLoading(false);
     }
 
+    const selectNode = async (event:TreeEventNodeEvent) => {
+        if (!event.node.id) return;
+
+        changeSelectedSubject(event.node.id);
+    }
+
     return (
         <Tree 
         expandedKeys={expandedKeys} 
         onToggle={(e) => setExpandedKeys(e.value)} 
-        //onNodeClick={selectNode} // show on 
+        onNodeClick={selectNode} // show on 
         //header={headerTemplate} 
         value={nodes} 
         filter 

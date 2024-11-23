@@ -1,6 +1,8 @@
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 import { Metadata } from "next";
+import { PrimeReactProvider } from "primereact/api";
+import { SubjectProvider } from "../components/SubjectProvider";
 
 export const metadata: Metadata = {
   title: 'Tipos de Dados',
@@ -15,6 +17,10 @@ export default async function DatasourcesLayout({
 
 
     return (
-        <body>{children}</body>
+      <PrimeReactProvider>
+        <SubjectProvider>
+          <body>{children}</body>
+        </SubjectProvider>
+      </PrimeReactProvider>
     )
 }

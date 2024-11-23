@@ -5,13 +5,10 @@ import React from 'react'
 import { Sidebar } from 'react-pro-sidebar';
 import SidePanelTitle from './SidePanelTitle';
 import SidePanelContentDataSources from './SidePanelContentDataSources';
-
-const SIDE_PANEL_OPTIONS = ["datasources", "datatypes"] as const;
-type SIDE_PANEL = typeof SIDE_PANEL_OPTIONS;        // type x = readonly ['op1', 'op2', ...]
-type SIDE_PANEL_TYPE = SIDE_PANEL[number]
+import { INTERFACE_CONTENT_TYPE } from '../public/utils';
 
 
-function SidePanel({sidePanelType}:{sidePanelType:SIDE_PANEL_TYPE}) {
+function SidePanel({sidePanelType}:{sidePanelType:INTERFACE_CONTENT_TYPE}) {
 
     function sidePanelContent() {
         if (sidePanelType == "datasources") {

@@ -4,9 +4,14 @@
 
 body {
   /* background: rgb(197, 198, 208); */
+  background-color: #F0F2EF;
 }
 
 @layer utilities {
+  #frames-area {
+    @apply flex-1 flex flex-col gap-2 p-2 h-full;
+  }
+
   .text-balance {
     text-wrap: balance;
   }
