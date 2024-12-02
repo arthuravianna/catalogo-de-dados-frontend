@@ -56,7 +56,7 @@ export async function query_relation_predicates(current_view:VIEW) {
     switch (current_view) {
         case VIEW.STRUCTURAL:
             query = `SELECT ?predicate ?predicate_caption WHERE {
-                icatalogo:irdfParents ds:field ?predicate.
+                icatalogo:dataSourcePredicates ds:field ?predicate.
             }`
 
             break;

@@ -6,6 +6,7 @@ import { Sidebar } from 'react-pro-sidebar';
 import SidePanelTitle from './SidePanelTitle';
 import SidePanelContentDataSources from './SidePanelContentDataSources';
 import { INTERFACE_CONTENT_TYPE } from '../public/utils';
+import SidePanelContentDataTypes from './SidePanelContentDataTypes';
 
 
 function SidePanel({sidePanelType}:{sidePanelType:INTERFACE_CONTENT_TYPE}) {
@@ -22,6 +23,7 @@ function SidePanel({sidePanelType}:{sidePanelType:INTERFACE_CONTENT_TYPE}) {
             return (
                 <>
                     <SidePanelTitle subtitle="Tipos de Dados"/>
+                    <SidePanelContentDataTypes/>
                 </>
             )
         }
