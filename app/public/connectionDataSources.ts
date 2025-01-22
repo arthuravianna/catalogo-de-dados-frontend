@@ -209,10 +209,10 @@ export async function query_root_info(root:string, current_view:VIEW, isNamespac
     const query = `
     SELECT ?name ?def ?type ?unit ?v ?unitName ?unitDefinition WHERE {
  	    ?s ds:field ?o.
-        ?o xsem:definition ?def.
         ?o irdf:exptabSet "${remove_quotes(root)}".
         ?o irdf:exptabColumn ?name.
         ?o irdf:exptabType ?type.
+        OPTIONAL {?o xsem:definition ?def}.
         OPTIONAL {?o xsem:valueExample ?v}.
         OPTIONAL {
             ?o irdf:exptabUnit ?unit

@@ -64,7 +64,7 @@ function FlatFrame() {
                 newData.push(
                     {
                         name: remove_quotes(item[namePos]),
-                        definition: item[definitionPos],
+                        definition: item[definitionPos]? item[definitionPos]: "indefinido",
                         type: remove_quotes(item[typePos]),
                         unit: item[unitPos]? remove_quotes(item[unitPos]): null,
                         value: item[valPos],
