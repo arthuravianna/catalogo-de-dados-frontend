@@ -7,6 +7,7 @@ import { SubjectContext } from './SubjectProvider'
 import FlatFrame from './FlatFrame'
 import { INTERFACE_CONTENT_TYPE } from '../public/utils'
 import TreeFrameDataTypes from './TreeFrameDataTypes'
+import RequestDataModal from './RequestDataModal'
 
 
 function FramesContent({frameContentType}:{frameContentType:INTERFACE_CONTENT_TYPE}) {
@@ -33,6 +34,7 @@ function FramesContent({frameContentType}:{frameContentType:INTERFACE_CONTENT_TY
 
     return (
         <div id="frame-content" className="flex-1 grid grid-cols-2 h-full gap-2">
+            <RequestDataModal/>
             {frameContent()}
         </div>
     )

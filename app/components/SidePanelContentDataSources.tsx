@@ -66,7 +66,7 @@ function SidePanelContentDataSources() {
                                 dataSources[rootSource.name].map((dataSouce, index) => {
                                     return (
                                         <MenuItem active={root.name == dataSouce.name} key={`${dataSouce}-${index}`}
-                                        onClick={() => changeRoot({name: dataSouce.name, isNamespace: false})}>
+                                        onClick={() => changeRoot({name: dataSouce.name, isNamespace: false, caption: dataSouce.caption||undefined})}>
                                             {dataSouce.caption? dataSouce.caption:dataSouce.name}
                                         </MenuItem>
                                     )

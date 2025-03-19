@@ -118,14 +118,15 @@ function FlatFrame() {
     return (
         <div className='frame'>
             <DataTable 
-            selectionMode={null} selection={selectedData!} onSelectionChange={(e:any) => setSelectedData(e.value)}
+            selectionMode={null}
+            selection={selectedData!} onSelectionChange={(e:any) => setSelectedData(e.value)}
             loading={loading} value={data} stripedRows scrollable scrollHeight={tableHeight} style={{fontSize: 12}} >
-                <Column selectionMode="multiple"  headerStyle={{ width: '3rem' }}></Column>
-                <Column field="name" header="Name" className='py-1'></Column>
-                <Column field="type" header="Type" className='py-1'></Column>
-                <Column field="unit" header="Unit" className='py-1' body={unitBody} ></Column>
-                <Column field="value" header="Example Value" className='py-1'></Column>
-                <Column field="definition" header="Definition" className='py-1'></Column>
+                {/* <Column selectionMode="multiple"  headerStyle={{ width: '3rem' }}></Column> */}
+                <Column field="name" header="Name" className='py-2'></Column>
+                <Column field="type" header="Type" className='py-2'></Column>
+                <Column field="unit" header="Unit" className='py-2' body={unitBody} ></Column>
+                <Column field="value" header="Example Value" className='py-2'></Column>
+                <Column field="definition" header="Definition" className='py-2'></Column>
             </DataTable>
         </div>
     )
