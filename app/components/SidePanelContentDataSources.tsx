@@ -1,38 +1,23 @@
 "use client"
 
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { SubjectContext } from './SubjectProvider';
 import { RNP_BLUE } from '../public/utils';
-import { query_namespace_datasources, query_navigable_namespaces } from '../public/connectionDataSources';
-import { NameWithCaption } from '../public/connectionTypesDefinitions';
+import { DataSources, RootDataSource } from '../datasources/page';
 
-function SidePanelContentDataSources() {
-    const { view, root, changeRoot } = useContext(SubjectContext);
-    const [rootDataSources, setRootDataSources] = useState<Array<NameWithCaption>|null>([]);
-    const [dataSources, setDataSources] = useState<Record<string, Array<NameWithCaption>>>({});
+function SidePanelContentDataSources(
+    {rootDataSources, dataSources}:
+    {rootDataSources:RootDataSource, dataSources:DataSources}
+) {
+    const { root, changeRoot } = useContext(SubjectContext);
     
     useEffect(() => {
-        const getData = async () => {
-            const namespaces = await query_navigable_namespaces(view);
-            if (!namespaces) return;
+        if (!rootDataSources) return;
 
-            changeRoot({name: namespaces[0].name, isNamespace: true}); // pre select the first namespace
-
-            let namespaceDataSources:Record<string, Array<NameWithCaption>> = {};
-            for (let namespace of namespaces) {
-                //if (!namespaceDataSources[namespace.namespace]) namespaceDataSources[namespace.namespace] = [];
-
-                const sources = await query_namespace_datasources(namespace.name);
-                namespaceDataSources[namespace.name] = sources;
-            }
-            
-            setRootDataSources(namespaces);
-            setDataSources(namespaceDataSources);
-        }
-        
-        getData();
+        // pre select the first namespace
+        changeRoot({name: rootDataSources[0].name, isNamespace: true});
     }, [])
     
     return (

@@ -2,26 +2,16 @@
 "use client"
 
 
-import React, { useContext, useEffect, useState } from 'react'
-import { Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import React, { useContext } from 'react'
+import { Menu, SubMenu } from 'react-pro-sidebar';
 import { SubjectContext } from './SubjectProvider';
 import { RNP_BLUE } from '../public/utils';
-import { getDataTypesRoots } from '../public/connectionDataTypes';
+import { DataTypeData } from '../datatypes/page';
 
 
-function SidePanelContentDataTypes() {
+function SidePanelContentDataTypes({rootDataTypes}:{rootDataTypes:DataTypeData}) {
     const { root, changeRoot } = useContext(SubjectContext);
-    const [rootDataTypes, setRootDataTypes] = useState<Array<[string, string|null]>>([]);
-    
-    useEffect(() => {
-        const getData = async () => {
-            const roots = await getDataTypesRoots();
-            
-            setRootDataTypes(roots);
-        }
-        
-        getData();
-    }, [])
+
     
     return (
         <Menu menuItemStyles={
