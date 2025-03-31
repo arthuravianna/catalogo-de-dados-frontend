@@ -2,8 +2,8 @@
 
 
 import { createContext, useState } from 'react';
-import { SubjectRelation, VIEW } from '../public/connectionTypesDefinitions';
-import { query_subject_info } from '../public/connectionDataSources';
+import { SubjectRelation, VIEW } from '@api/catalogo/connectionTypesDefinitions';
+import { query_subject_info } from '@api/catalogo/connectionDataSources';
 
 const FRAME_OPTIONS = ["tree", "flat"] as const;
 type FRAME = typeof FRAME_OPTIONS;        // type x = readonly ['op1', 'op2', ...]

@@ -7,7 +7,7 @@ import { SubjectContext } from './SubjectProvider'
 import { remove_quotes } from '../public/utils'
 //import { IoWarning } from "react-icons/io5"; // TODO: add warning "Example Value" is not included in the exported CSV
 import { IoInformationCircleOutline } from "react-icons/io5";
-import { query_root_info } from '../public/connectionDataSources'
+import { query_root_info } from '@api/catalogo/connectionDataSources'
 
 interface Info {
     name:string,

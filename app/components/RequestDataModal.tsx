@@ -8,6 +8,7 @@ import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { addLocale } from 'primereact/api';
 import { MultiSelect } from 'primereact/multiselect';
+import { addCartRequest, DataRequest } from '../public/utils';
 
 addLocale('pt-BR', {
     firstDayOfWeek: 0,
@@ -62,8 +63,25 @@ function RequestDataModal() {
         setSelectedDestination("");
     }
 
-    function submitRequest() {
-        // submit request
+    function handleAddRequest() {
+        if (!selectedSource || selectedSource.length == 0) return;
+        if (!selectedDestination || selectedDestination.length == 0) return;
+        if (!dates || dates.length < 2 || !dates[0] || !dates[1]) return;
+        if (!email || email.length == 0) return;
+
+        // add request
+        const dataRequest:DataRequest = {
+            data: {
+                id: root.name,
+                caption: root.caption? root.caption:root.name
+            },
+            start_time: dates[0].getTime(),
+            end_time: dates[1].getTime(),
+            source: selectedSource,
+            destination: selectedDestination,
+            email: email
+        }
+        addCartRequest(dataRequest);
 
         // close
         close()
@@ -116,9 +134,9 @@ function RequestDataModal() {
                 <div className='w-full flex justify-end'>
                     <button
                     className="inline-flex items-center gap-2 rounded-md bg-blue-600 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner hover:bg-rnp-blue"
-                    onClick={submitRequest}
+                    onClick={handleAddRequest}
                     >
-                    Submeter Pedido
+                    Adicionar Solicitação
                     </button>
                 </div>
             </div>

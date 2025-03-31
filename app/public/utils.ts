@@ -6,6 +6,16 @@ type INTERFACE_CONTENT = typeof INTERFACE_CONTENT_OPTIONS;        // type x = re
 export type INTERFACE_CONTENT_TYPE = INTERFACE_CONTENT[number]
 
 
+export interface DataRequest {
+    data:{id: string, caption:string},
+    start_time:number,
+    end_time:number,
+    source:string,
+    destination:string,
+    email:string
+}
+const DATA_REQUESTS_LOCAL_STORAGE_KEY = "cartRequests"
+
 export function remove_quotes(s:string) {
     const chars = ["'", "\""]
 
@@ -51,3 +61,31 @@ export function insertIntoTree(curr_node:TreeNode, node:TreeNode, parentKey:stri
 
     return curr_node;
 }
+
+
+export function addCartRequest(dataRequest:DataRequest) {
+    if (typeof window !== "undefined") {
+        let items = getCartRequests();
+        items.push(dataRequest);
+
+        localStorage.setItem(DATA_REQUESTS_LOCAL_STORAGE_KEY, JSON.stringify(items));    
+    }
+}
+
+export function getCartRequests() {
+    if (typeof window !== "undefined") {
+      const storedCartItems = localStorage.getItem(DATA_REQUESTS_LOCAL_STORAGE_KEY);
+      if (storedCartItems !== null) {
+        try {
+          const cartItems = JSON.parse(storedCartItems);
+          return cartItems;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+    return [];
+  }
+  
+  
+  

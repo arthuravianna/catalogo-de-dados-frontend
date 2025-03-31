@@ -1,7 +1,7 @@
 "use server"
 
-import { envClient } from "./envClient";
-import { remove_quotes } from "./utils";
+import { envClient } from "../../public/envClient";
+import { remove_quotes } from "../../public/utils";
 
 export async function do_query(query:string) {
     const res = await fetch(`${envClient.RDF_SERVER_URL}/query`, {

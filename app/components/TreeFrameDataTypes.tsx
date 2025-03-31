@@ -4,9 +4,9 @@
 import { Tree, TreeEventNodeEvent, TreeExpandedKeysType } from 'primereact/tree'
 import { TreeNode } from 'primereact/treenode';
 import React, { useContext, useEffect, useState } from 'react'
-import { getDataFromDataType, getDatatypeAndMetrics, getDataTypes, getDataTypesRoots } from '../public/connectionDataTypes';
+import { getDatatypeAndMetrics, getDataTypesRoots } from '@api/catalogo/connectionDataTypes';
 import { remove_quotes, updateTreeNode } from '../public/utils';
-import { get_caption } from '../public/connection';
+import { get_caption } from '@api/catalogo/connection';
 import { SubjectContext } from './SubjectProvider';
 
 

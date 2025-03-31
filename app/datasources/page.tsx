@@ -1,8 +1,8 @@
 import FramesContent from "@/app/components/FramesContent";
 import HeaderFrame from "@/app/components/HeaderFrame";
 import SidePanel from "@/app/components/SidePanel";
-import { query_namespace_datasources, query_navigable_namespaces } from '../public/connectionDataSources';
-import { NameWithCaption, VIEW } from '../public/connectionTypesDefinitions';
+import { query_namespace_datasources, query_navigable_namespaces } from '@api/catalogo/connectionDataSources';
+import { NameWithCaption, VIEW } from '@api/catalogo/connectionTypesDefinitions';
 import { INTERFACE_CONTENT_TYPE } from "../public/utils";
 
 export const revalidate = 300;
