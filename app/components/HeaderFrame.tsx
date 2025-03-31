@@ -3,9 +3,11 @@
 import React, { useContext, useEffect } from 'react'
 import { SubjectContext } from './SubjectProvider';
 import ShoppingCart from './ShoppingCart';
+import { RequestsCartContext } from '../context/RequestsCart';
 
 function HeaderFrame() {
-    const {frame, dataToExport, changeDataToExport, setExportData, setRequestData} = useContext(SubjectContext);
+    const {frame, dataToExport, changeDataToExport, setExportData} = useContext(SubjectContext);
+    const {setShowRequestModal} = useContext(RequestsCartContext);
     const exportDisabled = frame == "tree";
 
     useEffect(() => {
@@ -36,7 +38,7 @@ function HeaderFrame() {
                 Export as CSV
             </button>
 
-            <button disabled={exportDisabled} onClick={() => setRequestData(true)}
+            <button disabled={exportDisabled} onClick={() => setShowRequestModal(true)}
             className={`rounded-md p-2 flex items-center border border-black bg-gray-200 ${exportDisabled? "":"hover:text-white hover:bg-rnp-blue"}`}>
                 Solicitar Dados
             </button>

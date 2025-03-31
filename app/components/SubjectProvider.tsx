@@ -39,8 +39,7 @@ export const SubjectContext = createContext<{
     subject:Subject, changeSubject(s:string):Promise<Subject>,
     selectedSubject:Subject, changeSelectedSubject(subjectName:string):void,
     exportData:boolean, setExportData(e:boolean):void,
-    dataToExport:string, changeDataToExport(data:string):void,
-    requestData:boolean, setRequestData(e:boolean):void
+    dataToExport:string, changeDataToExport(data:string):void
 }>({
     view:0,
     root:emptyRoot, changeRoot:(root:Root) => null,
@@ -48,8 +47,7 @@ export const SubjectContext = createContext<{
     subject: emptySubject, changeSubject: async (s:string) => emptySubject,
     selectedSubject:emptySubject, changeSelectedSubject: async () => null,
     exportData:false, setExportData: (e:boolean) => null,
-    dataToExport:"", changeDataToExport: (data:string) => null,
-    requestData:false, setRequestData: (e:boolean) => null
+    dataToExport:"", changeDataToExport: (data:string) => null
 });
 
 
@@ -61,7 +59,6 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
     const [frame, setFrame] = useState<FRAME_OPTIONS_TYPE>("tree");
     const [exportData, setExportData] = useState(false);
     const [dataToExport, setDataToExport] = useState("");
-    const [requestData, setRequestData] = useState(false);
 
 
 
@@ -106,8 +103,7 @@ export function SubjectProvider({ children }:{ children: React.ReactNode }) {
             subject, changeSubject,
             selectedSubject, changeSelectedSubject,
             exportData, setExportData,
-            dataToExport, changeDataToExport,
-            requestData, setRequestData
+            dataToExport, changeDataToExport
         } }>
             { children }
         </SubjectContext.Provider>
