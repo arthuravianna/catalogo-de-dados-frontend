@@ -9,7 +9,7 @@ import { SubjectContext } from './SubjectProvider';
 import { IoList } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
 import { remove_quotes, updateTreeNode } from '../public/utils';
-import { query_namespace_roots, query_subject_info, query_relation_predicates } from '../public/connectionDataSources';
+import { query_namespace_roots, query_subject_info, query_relation_predicates } from '@api/catalogo/connectionDataSources';
 
 const ICONS_MAP:Record<string, React.JSX.Element> = {
     "ds:listof": <IoList />,

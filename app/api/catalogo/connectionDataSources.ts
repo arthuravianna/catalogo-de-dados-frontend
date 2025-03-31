@@ -3,7 +3,7 @@
 
 import { VIEW, NameWithCaption, SubjectRelation } from "./connectionTypesDefinitions";
 import { do_query, get_caption } from "./connection";
-import { remove_quotes } from "./utils";
+import { remove_quotes } from "../../public/utils";
 
 
 

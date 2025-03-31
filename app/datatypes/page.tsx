@@ -1,7 +1,7 @@
 import FramesContent from '../components/FramesContent';
 import HeaderFrame from '../components/HeaderFrame';
 import SidePanel from '../components/SidePanel';
-import { getDataTypesRoots } from '../public/connectionDataTypes';
+import { getDataTypesRoots } from '@api/catalogo/connectionDataTypes';
 import { INTERFACE_CONTENT_TYPE } from '../public/utils';
 
 export const revalidate = 300;
